@@ -40,7 +40,67 @@ python3.13 -m venv .venv
 4. Which facilities and counties have longer average stays?
 5. How do primary payment groups differ in volume and average charges?
 
-## Updated interface
+## Background research and design decisions
+
+New York State describes SPARCS as a discharge-data system containing information on patient characteristics, diagnoses, treatments, services and charges [1, 2]. This makes it suitable for comparing groups of hospital stays. I chose a dashboard so users can narrow these records to a hospital, county or patient group instead of searching through the original file.
+
+AHRQ explains that CCSR groups diagnosis codes into clinically meaningful categories and supports analysis of healthcare utilisation, costs and outcomes [3]. This supports comparing average stays by diagnosis. The app uses the diagnosis descriptions already supplied in the dataset; it does not apply a new version of the CCSR mapping.
+
+AHRQ also distinguishes hospital charges, the amounts billed, from costs, the expenses of providing services [4]. For this reason, the dashboard labels charges and costs separately. Neither is presented as the amount paid by a patient or insurer.
+
+My interpretation is that longer stays and higher discharge volumes can help administrators identify areas for further capacity review. These comparisons do not show that a hospital is inefficient: patient severity, diagnoses and specialist services must also be considered.
+
+## Research questions and findings
+
+The following results were calculated from all 2,101,588 supplied discharge records, with no demographic or hospital filters. For ranked diagnosis, county and facility comparisons, I used a minimum of **30 records per group** to reduce the influence of very small groups. This is a practical display threshold, not a statistical guarantee. Set the app's advanced minimum-group setting to 30 to reproduce the diagnosis and county rankings. The app defaults to 1 so small filtered selections remain visible.
+
+### 1. Which diagnoses are associated with the longest average stays?
+
+Among diagnosis groups with at least 30 records, **spinal cord injury, subsequent encounter** had the highest average recorded stay at **27.62 days across 176 discharges**. Short gestation, low birth weight and fetal growth retardation followed at **27.47 days across 307 discharges**, then respiratory distress syndrome at **26.19 days across 311 discharges**.
+
+This identifies diagnosis groups that may need closer review of bed use and discharge planning. It does not establish the medical reason for longer stays. The Overview diagnosis chart shows the comparison, including group record counts on hover.
+
+### 2. Which age groups have the highest average hospital charges?
+
+| Age group | Discharge records | Average charges per discharge USD |
+|---|---:|---:|
+| 50 to 69 | 584,480 | $90,103.61 |
+| 70 or Older | 619,644 | $87,031.25 |
+| 30 to 49 | 415,681 | $58,971.44 |
+| 18 to 29 | 192,051 | $47,658.69 |
+| 0 to 17 | 289,732 | $47,628.26 |
+
+The **50 to 69** group had the highest average charges. This can guide further financial analysis of the services used by different age groups. It does not mean age itself causes higher charges; diagnoses, procedures and severity may differ. The age comparison appears in Charges & payment.
+
+### 3. How do charges vary across severity levels?
+
+| Recorded severity | Discharge records | Average charges per discharge USD |
+|---|---:|---:|
+| Minor | 638,227 | $36,690.95 |
+| Moderate | 760,535 | $54,647.65 |
+| Major | 499,474 | $90,426.68 |
+| Extreme | 200,802 | $217,898.27 |
+| Unknown | 2,550 | $62,351.05 |
+
+Average charges increased across the four named severity levels. Extreme-severity records had much higher average charges than minor-severity records. This supports looking at severity when reviewing financial differences between facilities. Unknown is a separate missing/unspecified category, not an additional severity level. The severity box plot shows the distribution, while the financial table reports means.
+
+### 4. Which facilities and counties have longer average stays?
+
+Among groups with at least 30 records, **Columbia County** had the highest average recorded stay at **7.40 days across 3,320 discharges**. Across all eligible facilities, **Blythedale Children's Hospital** had the highest average at **57.34 days across 389 discharges**, followed by **Henry J. Carter Specialty Hospital**, at **45.79 days across 524 discharges**.
+
+These results suggest that facility type and case mix should be investigated before drawing operational conclusions. The comparison is not a ranking of hospital quality. In Stays & facilities, the county bar chart ranks average stays, the facility bar chart ranks discharge volume, and the heatmap compares stays for the 15 highest-volume selected facilities. To inspect a specialist facility outside that heatmap, select it in the Hospital filter or export a facility summary in Data explorer. The facility findings above come from the full facility summary, not the volume ranking.
+
+### 5. How do primary payment groups differ in volume and average charges?
+
+**Medicare** was the largest primary payment group, with **826,250 discharge records**, followed by **Medicaid**, with **646,300**. Their average charges were **$87,975.99** and **$62,511.64**, respectively. **Miscellaneous/Other** had the highest average charges at **$96,817.39**, across **22,526 discharges**.
+
+The payment charts show the discharge share and average charges of each primary payment group. These patterns can help users investigate how patient mix differs across groups. They do not show insurer reimbursement, patient out-of-pocket spending or an effect caused by the payment type.
+
+### Overall interpretation
+
+The results show differences in recorded stays and billed charges across clinical, demographic, geographical and payment groups. Diagnosis and severity comparisons give useful context for interpreting facility results. The dashboard supports investigation; it does not explain the causes of those differences or recommend clinical treatment.
+
+## Interface and user journey
 
 A separate welcome screen asks for a first name and role before opening the dashboard. These values remain only in Streamlit session state. Filters cascade: selecting an upstream group clears downstream choices and offers only compatible values. The default minimum comparison count is one, so small selections remain visible. The research questions stay in this README rather than in the main dashboard.
 
@@ -116,22 +176,43 @@ From the project root:
 
 Tests check full-data totals, chart count, filter totals against the data, reset, empty cohorts, a narrow stay range and cleaning edge cases. Automated checks do not guarantee every future browser, package or hosting environment will behave identically.
 
-## GitHub and Streamlit deployment
+## GitHub repository
 
-Create a repository with the naming convention requested by your teacher, such as `IADAI202-1000330-Phreya-Shethwala`. Upload the extracted contents, preserving the `data` and `.streamlit` folders. The ZIP is a delivery package; the repository must contain its extracted files. The included Parquet file is below GitHub's 100 MB per-file limit. Do not upload `.venv`, caches or the original 832 MB CSV.
+[Open the project repository](https://github.com/phreya07/IADAI202-2505204-PhreyaShethwala-)
 
-In Streamlit Community Cloud, connect the GitHub account, select the repository and branch, use `app.py` as the entry point, and choose Python 3.13 in advanced settings if available. Deploy and open the app. Test filters and downloads on the live deployment.
+## Deployment instructions
 
-**Live app URL:** Add the actual URL here after deployment. This package has not been published to a user account.
+Create a repository with the naming convention requested by your teacher, named `IADAI202-2505204-PhreyaShethwala-`. Upload the extracted contents, preserving the `data` and `.streamlit` folders. The ZIP is a delivery package; the repository must contain its extracted files. The included Parquet file is below GitHub's 100 MB per-file limit. Do not upload `.venv`, caches or the original 832 MB CSV.
 
-**Screenshots:** After launching, capture Overview, Stays & facilities and Charges & payment. Save them under `screenshots/` and add their actual Markdown image links here before submission. Screenshots are not bundled because browser installation was unavailable in the build environment.
+1. Open Streamlit Community Cloud and sign in with the GitHub account that can access the repository.
+2. Choose Create app and select the repository `phreya07/IADAI202-2505204-PhreyaShethwala-`.
+3. Set the branch to `main` and the main file path to `app.py` if the file is at the repository root. If files are inside a subfolder, use the actual relative path instead.
+4. Select a Python version compatible with requirements.txt. Local instructions use Python 3.13; automated build checks were run under Python 3.12.
+5. Deploy, allow dependency installation to finish, then open the live app.
+6. Test the welcome form, single and combined filters, reset, each tab, data pages and CSV downloads.
+7. Copy the actual live URL into the section below. If deployment fails, inspect the build logs rather than treating the source-code upload as successful deployment.
+
+**Live app URL:** Add the actual URL here after deployment. Replace this line with the actual Streamlit Cloud address before submission; the GitHub address above is the source repository, not the dashboard link.
+
+**Screenshots:** After launching, capture Overview, Stays & facilities and Charges & payment. Save them under `screenshots/` and add their actual Markdown image links here before submission. Include the welcome page and show at least one working filtered view. Use only screenshots of the finished app; the supplied rubric and error screenshots are not dashboard evidence.
 
 ## References
 
-- Dataset: supplied Hospital_Inpatient_Discharges__SPARCS_De-Identified___2021_20231012.zip.
-- New York State SPARCS: https://www.health.ny.gov/statistics/sparcs/
-- AHRQ CCSR: https://hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp
-- Streamlit: https://docs.streamlit.io/
-- Plotly: https://plotly.com/python/
+Background sources accessed 21 October 2026:
 
-These are background/technical reference links; no external research findings have been fabricated. Add your own short, cited domain research for the problem-understanding criterion.
+1. New York State Department of Health. [Statewide Planning and Research Cooperative System](https://www.health.ny.gov/statistics/sparcs/). Background on the discharge-data system.
+2. New York State Health Data NY. [Hospital Inpatient Discharges SPARCS De-Identified 2021](https://health.data.ny.gov/Health/Hospital-Inpatient-Discharges-SPARCS-De-Identified/tg3i-cinn). Official dataset page. All reported calculations use the supplied 2023-10-12 CSV snapshot, which may differ from later revisions on the live page.
+3. AHRQ HCUP. [Clinical Classifications Software Refined for ICD-10-CM Diagnoses](https://hcup-us.ahrq.gov/toolssoftware/ccsr/dxccsr.jsp). Diagnosis grouping and analytical uses.
+4. AHRQ HCUP. [Cost-to-Charge Ratio for Inpatient Files](https://hcup-us.ahrq.gov/db/ccr/ip-ccr/ip-ccr.jsp). Explanation of billed charges versus costs. This conceptual distinction is used; HCUP ratios are not applied to SPARCS data.
+5. Streamlit. [Prepare and deploy your app on Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app). Deployment reference.
+6. Plotly. [Python graphing library](https://plotly.com/python/). Technical reference for the interactive visuals.
+
+## Author and assessment
+
+**Student:** Phreya Shethwala  
+**CRS:** Artificial Intelligence  
+**Course:** Mathematics for AI-II  
+**Assessment:** Summative Assessment, Scenario 2, Hospital Inpatient Discharges Dashboard  
+**School:** Udgam School for Children
+
+The repository name includes 2505204. Use the candidate registration number confirmed by the school in the final submission PDF.
