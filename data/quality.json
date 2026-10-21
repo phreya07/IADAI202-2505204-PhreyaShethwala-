@@ -1,0 +1,12 @@
+{
+  "source_rows": 2101588,
+  "retained_rows": 2101588,
+  "excluded_invalid_stays": 0,
+  "capped_stays": 1561,
+  "missing_charges": 0,
+  "missing_costs": 0,
+  "facilities": 205,
+  "mean_stay": 5.741987963387686,
+  "mean_charges": 73305.4163437886,
+  "source_file": "Hospital_Inpatient_Discharges__SPARCS_De-Identified___2021_20231012.zip"
+}

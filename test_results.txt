@@ -1,0 +1,13 @@
+2026-10-21 05:59:39.910 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_01_full_dataset (test_app.DashboardTests.test_01_full_dataset) ... ok
+test_02_filter_and_reset (test_app.DashboardTests.test_02_filter_and_reset) ... ok
+test_03_empty_cohort (test_app.DashboardTests.test_03_empty_cohort) ... ok
+test_04_small_cohort (test_app.DashboardTests.test_04_small_cohort) ... ok
+test_05_welcome (test_app.DashboardTests.test_05_welcome) ... 2026-10-21 05:59:49.116 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_06_cleaning (test_app.DashboardTests.test_06_cleaning) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 11.367s
+
+OK
