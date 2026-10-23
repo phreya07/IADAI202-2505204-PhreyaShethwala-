@@ -216,3 +216,5 @@ Background sources accessed 21 October 2026:
 **School:** Udgam School for Children
 
 streamlit- https://htjzvjudzwaqspnrpssw7w.streamlit.app/
+
+EDA- https://colab.research.google.com/drive/1GR-jNJzIP6GwvLegpHZKG9tiWu4e5IfT?usp=sharing
